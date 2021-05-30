@@ -58,7 +58,7 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   // Check if the snake has died.
   for (auto const &item : body) {
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
-      alive = false;
+      alive = false; //TODO: move me?
     }
   }
 }
@@ -74,6 +74,19 @@ bool Snake::SnakeCell(int x, int y) {
     if (x == item.x && y == item.y) {
       return true;
     }
+  }
+  return false;
+}
+
+bool Snake::did_eat_food(int x, int y){
+  // Check if there's food over here
+  if (x == head_x && y == head_y) {
+    score++;
+    // Grow snake and increase speed.
+    GrowBody();
+    speed += 0.02;
+
+    return true;
   }
   return false;
 }

@@ -18,11 +18,14 @@ class Snake {
 
   void GrowBody();
   bool SnakeCell(int x, int y);
+  //checks if the snake is a the right position to eat the food; updates accordingly;
+  bool did_eat_food(int x, int y); 
 
   Direction direction = Direction::kUp;
 
   float speed{0.1f};
   int size{1};
+  int score;{0}
   bool alive{true};
   float head_x;
   float head_y;
