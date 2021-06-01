@@ -5,8 +5,7 @@
 void Snake::Update() {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
-      static_cast<int>(
-          head_y)};  // We first capture the head's cell before updating.
+      static_cast<int>(head_y)};  // We first capture the head's cell before updating.
   UpdateHead();
   SDL_Point current_cell{
       static_cast<int>(head_x),
@@ -14,26 +13,37 @@ void Snake::Update() {
 
   // Update all of the body vector items if the snake head has moved to a new
   // cell.
+  //std::cout<< "checking if cell is free for body"<<"\n"; //TODO: make a grid for thisvvv
   if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) {
+    //std::cout<< "updating body"<<"\n"; 
     UpdateBody(current_cell, prev_cell);
   }
 }
 
 void Snake::UpdateHead() {
+  //std::cout<<"updating at snake "<<this<<"\n";
+  //std::cout<<"pre head_x: "<<std::to_string(head_x)<<"\n";
+  //std::cout<<"pre head_y: "<<std::to_string(head_y)<<"\n";
+
+  //std::cout<< "updating head with direction: "; 
   switch (direction) {
     case Direction::kUp:
+   //   std::cout<<"up"<<"\n";
       head_y -= speed;
       break;
 
     case Direction::kDown:
+    //  std::cout<<"down"<<"\n";
       head_y += speed;
       break;
 
     case Direction::kLeft:
+     // std::cout<<"left"<<"\n";
       head_x -= speed;
       break;
 
     case Direction::kRight:
+     // std::cout<<"right"<<"\n";
       head_x += speed;
       break;
   }
@@ -41,6 +51,9 @@ void Snake::UpdateHead() {
   // Wrap the Snake around to the beginning if going off of the screen.
   head_x = fmod(head_x + grid_width, grid_width);
   head_y = fmod(head_y + grid_height, grid_height);
+
+  //std::cout<<"head_x: "<<std::to_string(head_x)<<"\n";
+  //std::cout<<"head_y: "<<std::to_string(head_y)<<"\n";
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
@@ -80,7 +93,12 @@ bool Snake::SnakeCell(int x, int y) {
 
 bool Snake::did_eat_food(int x, int y){
   // Check if there's food over here
-  if (x == head_x && y == head_y) {
+
+  int new_x = static_cast<int>(head_x);
+  int new_y = static_cast<int>(head_y);
+
+  if (x == new_x && y == new_y) {
+    std::cout<<"found food!"<<"\n";
     score++;
     // Grow snake and increase speed.
     GrowBody();

@@ -5,13 +5,13 @@
 
 class Controller {
  public:
-  Controller(Snake& snake);
-  void HandleInput(bool &running) const;
+  Controller(Snake& snake):snake(snake){}
+  void HandleInput(bool &running);
 
  private:
-  Snake snake;
+  Snake& snake;
   void ChangeDirection(Snake::Direction input,
-                       Snake::Direction opposite) const;
+                       Snake::Direction opposite);
 };
 
 #endif

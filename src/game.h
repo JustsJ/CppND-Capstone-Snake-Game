@@ -5,23 +5,27 @@
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
+#include "color.h"
 #include "snake.h"
+#include <vector>
+
+//the amount of unoccupied space (width and length wise) given to every snake when the game starts,
+//with the snake itself located roughly in the middle of it.
+#define SPACE_PER_SNAKE 3 
 
 class Game {
  public:
-  Game(std::size_t grid_width, std::size_t grid_height);
+  Game(std::size_t grid_width, std::size_t grid_height, int snake_count);
   void Run(Renderer &renderer,
            std::size_t target_frame_duration);
   int GetPlayerScore() const;
   int GetPlayerSize() const;
-  int GetCpuScore() const;
-  int GetCpuSize() const;
 
  private:
-  Snake player_snake;
-  Snake cpu_snake;
+  Snake* player_snake;
+  std::vector<Snake*> snakes;
   SDL_Point food;
-  private bool game_over;
+  bool game_over;
 
   std::random_device dev;
   std::mt19937 engine;
