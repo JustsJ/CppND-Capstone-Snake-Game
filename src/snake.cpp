@@ -21,29 +21,24 @@ void Snake::Update() {
 }
 
 void Snake::UpdateHead() {
-  //std::cout<<"updating at snake "<<this<<"\n";
-  //std::cout<<"pre head_x: "<<std::to_string(head_x)<<"\n";
-  //std::cout<<"pre head_y: "<<std::to_string(head_y)<<"\n";
+  
+  float old_x = head_x;
+  float old_y = head_y;
 
-  //std::cout<< "updating head with direction: "; 
   switch (direction) {
     case Direction::kUp:
-   //   std::cout<<"up"<<"\n";
       head_y -= speed;
       break;
 
     case Direction::kDown:
-    //  std::cout<<"down"<<"\n";
       head_y += speed;
       break;
 
     case Direction::kLeft:
-     // std::cout<<"left"<<"\n";
       head_x -= speed;
       break;
 
     case Direction::kRight:
-     // std::cout<<"right"<<"\n";
       head_x += speed;
       break;
   }
@@ -52,44 +47,42 @@ void Snake::UpdateHead() {
   head_x = fmod(head_x + grid_width, grid_width);
   head_y = fmod(head_y + grid_height, grid_height);
 
-  //std::cout<<"head_x: "<<std::to_string(head_x)<<"\n";
-  //std::cout<<"head_y: "<<std::to_string(head_y)<<"\n";
+  //check if the snake dies by running into another snake, updates head in the grid.
+  int t_old_x = static_cast<int>(old_x);
+  int t_old_y = static_cast<int>(old_y);
+  int t_head_x = static_cast<int>(head_x);
+  int t_head_y = static_cast<int>(head_y);
+
+  //check if the head has moved, and if the new cell is already occupied
+  if ((t_head_x != t_old_x || t_head_y != t_old_y) && grid[t_head_x][t_head_y] == 1){
+    alive = false;
+    for (auto &item: body){
+      grid[static_cast<int>(item.x)][static_cast<int>(item.y)] = 0; 
+      grid[t_old_x][t_old_y] = 0;
+    }
+  }
+  else{
+    grid[t_old_x][t_old_y] = 0;
+    grid[t_head_x][t_head_y] = 1;
+  }
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
-  // Add previous head location to vector
+  // Add previous head location to vector and the grid
   body.push_back(prev_head_cell);
+  grid[static_cast<int>(body.back().x)][static_cast<int>(body.back().y)] = 1;
 
   if (!growing) {
     // Remove the tail from the vector.
+    grid[static_cast<int>(body.front().x)][static_cast<int>(body.front().y)] = 0;
     body.erase(body.begin());
   } else {
     growing = false;
     size++;
   }
-
-  // Check if the snake has died.
-  for (auto const &item : body) {
-    if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
-      alive = false; //TODO: move me?
-    }
-  }
 }
 
 void Snake::GrowBody() { growing = true; }
-
-// Inefficient method to check if cell is occupied by snake.
-bool Snake::SnakeCell(int x, int y) {
-  if (x == static_cast<int>(head_x) && y == static_cast<int>(head_y)) {
-    return true;
-  }
-  for (auto const &item : body) {
-    if (x == item.x && y == item.y) {
-      return true;
-    }
-  }
-  return false;
-}
 
 bool Snake::did_eat_food(int x, int y){
   // Check if there's food over here

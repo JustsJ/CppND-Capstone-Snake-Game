@@ -9,9 +9,8 @@
 #include "snake.h"
 #include <vector>
 
-//the amount of unoccupied space (width and length wise) given to every snake when the game starts,
-//with the snake itself located roughly in the middle of it.
-#define SPACE_PER_SNAKE 3 
+
+
 
 class Game {
  public:
@@ -20,6 +19,13 @@ class Game {
            std::size_t target_frame_duration);
   int GetPlayerScore() const;
   int GetPlayerSize() const;
+
+  //the amount of unoccupied space (width and length wise) given to every snake when the game starts,
+  //with the snake itself located roughly in the middle of it.
+  constexpr static int space_per_snake = 3;
+
+  //the grid which keeps track of the state of the game. 0-free, 1-snake, 2-food
+  std::vector<std::vector<int>> grid;
 
  private:
   Snake* player_snake;

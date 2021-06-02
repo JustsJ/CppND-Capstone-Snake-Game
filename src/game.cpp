@@ -7,16 +7,19 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
         
+        //create the grid
+        grid = std::vector<std::vector<int>>(grid_width,std::vector<int>(grid_height,0));
+
         //create all the snakes in the game;
         //Each snake starts with a square of free space around it;
         //each side of that suare is of length SPACE_PER_SNAKE;
 
         //This puts the snake roughly in the middle of it's square;
-        int start_x = SPACE_PER_SNAKE / 2;
-        int start_y = SPACE_PER_SNAKE / 2;
+        int start_x = space_per_snake / 2;
+        int start_y = space_per_snake / 2;
 
-        int max_positions_x = grid_width / SPACE_PER_SNAKE;
-        int max_pisitions_y = grid_height / SPACE_PER_SNAKE;
+        int max_positions_x = grid_width / space_per_snake;
+        int max_pisitions_y = grid_height / space_per_snake;
         
         for (int i=0;i<snake_count;i++){
           Color color(Colors(i%10));
@@ -24,20 +27,22 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
           //the first snake will always be the player snake, the rest are cpu controlled
           if (i==0){
             
-            snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,color,true));
+            snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,grid,color,true));
             player_snake = snakes[0];
             //std::cout<<"player created: "<<snakes[0]<<"\n";
             continue;
           }
           //adjust the start coordinates to make sure each snake has it's space
-          if(start_x + SPACE_PER_SNAKE > grid_width){
-            start_y += SPACE_PER_SNAKE;
-            start_x = SPACE_PER_SNAKE / 2;
+          if(start_x + space_per_snake > grid_width){
+            //go down the y-axis if there is no more space in x-axis
+            start_y += space_per_snake;
+            start_x = space_per_snake / 2;
           }
           else{
-            start_x += SPACE_PER_SNAKE;
+            //advance by x-axis to the next space
+            start_x += space_per_snake;
           }
-          snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,color,false));
+          snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,grid,color,false));
           //std::cout<<"snake created: "<<snakes[i]<<"\n";
         }
 
@@ -46,6 +51,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
   //for (Snake* snake: snakes){
   //  std::cout<<snake<<"\n";
   //}
+
   PlaceFood();
 }
 
@@ -98,17 +104,11 @@ void Game::PlaceFood() {
   while (true) {
     x = random_w(engine);
     y = random_h(engine);
-    cell_is_free = true;
-    // Check that the location is not occupied by a snake item before placing
-    // food.
-    
-    for (Snake* snake: snakes){
-      cell_is_free &= !snake->SnakeCell(x,y);
-    }
 
-    if (cell_is_free) {
+    if (grid[x][y]==0) {
       food.x = x;
       food.y = y;
+      grid[x][y] = 2;
       return;
     }
   }
@@ -120,11 +120,10 @@ void Game::Update() {
   bool food_eaten = false;
 
   for (Snake* snake: snakes){
-    snake->Update();
-    //std::cout<<"taking snake at"<< (&snake)<<"\n";
-    //std::cout<<"update 1st snake head_x: "<<std::to_string(snakes[0].head_x)<<"\n";
-    //std::cout<<"update 1st snake head_x: "<<std::to_string(snakes[0].head_y)<<"\n";
-    food_eaten |= snake->did_eat_food(food.x,food.y);
+    if (snake->alive){
+      snake->Update();
+      food_eaten |= snake->did_eat_food(food.x,food.y);
+    }
   }
 
   if (food_eaten){
