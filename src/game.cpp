@@ -7,12 +7,9 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
         
-        //create the grid
-        grid = std::vector<std::vector<int>>(grid_width,std::vector<int>(grid_height,0));
-
         //create all the snakes in the game;
         //Each snake starts with a square of free space around it;
-        //each side of that suare is of length SPACE_PER_SNAKE;
+        //each side of that square is of length space_per_snake;
 
         //This puts the snake roughly in the middle of it's square;
         int start_x = space_per_snake / 2;
@@ -21,13 +18,16 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
         int max_positions_x = grid_width / space_per_snake;
         int max_pisitions_y = grid_height / space_per_snake;
         
+        grid = new std::vector<std::vector<int>>(grid_width,std::vector<int>(grid_height,0));
+
         for (int i=0;i<snake_count;i++){
           Color color(Colors(i%10));
 
           //the first snake will always be the player snake, the rest are cpu controlled
           if (i==0){
             
-            snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,grid,color,true));
+            snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,*grid,color,true));
+            (*grid)[start_x][start_y] = 1;
             player_snake = snakes[0];
             //std::cout<<"player created: "<<snakes[0]<<"\n";
             continue;
@@ -42,17 +42,26 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
             //advance by x-axis to the next space
             start_x += space_per_snake;
           }
-          snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,grid,color,false));
+          snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,*grid,color,false));
+          (*grid)[start_x][start_y] = 1;
           //std::cout<<"snake created: "<<snakes[i]<<"\n";
         }
 
   //std::cout<<"creation complete: "<<"\n";
-  std::cout<<"player snake: "<<player_snake<<"\n";
+  //std::cout<<"player snake: "<<player_snake<<"\n";
   //for (Snake* snake: snakes){
   //  std::cout<<snake<<"\n";
   //}
 
-  PlaceFood();
+}
+
+Game::~Game(){
+  
+  delete grid;
+
+  for (Snake* snake: snakes){
+    delete snake;
+  }
 }
 
 void Game::Run(Renderer &renderer,
@@ -64,14 +73,30 @@ void Game::Run(Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-  std::cout<<"Snake passed to controller: "<<player_snake<<"\n";
   Controller player_controller(*player_snake);
+
+  std::vector<CpuController> cpu_controllers;
+  for (Snake* snake: snakes){
+    if (snake->player_controlled){
+      continue;
+    }
+    cpu_controllers.push_back(CpuController(*snake, *grid));
+
+  }
+
+  //place the first peace of food before starting
+  PlaceFood();
 
   while (running) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
     player_controller.HandleInput(running);
+
+    for (CpuController c: cpu_controllers){
+      c.handle_direction(food.x,food.y);
+    }
+
     Update();
     renderer.Render(snakes, food);
 
@@ -95,20 +120,23 @@ void Game::Run(Renderer &renderer,
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
+    if (game_over){
+      break;
+    }
   }
 }
 
 void Game::PlaceFood() {
   int x, y;
-  bool cell_is_free;
   while (true) {
     x = random_w(engine);
     y = random_h(engine);
 
-    if (grid[x][y]==0) {
+    
+    if ((*grid)[x][y] == 0) {
       food.x = x;
       food.y = y;
-      grid[x][y] = 2;
+      (*grid)[x][y] = 2;
       return;
     }
   }
@@ -117,16 +145,18 @@ void Game::PlaceFood() {
 void Game::Update() {
   if (game_over) return;
 
-  bool food_eaten = false;
+  bool needs_more_food = false;
 
   for (Snake* snake: snakes){
-    if (snake->alive){
-      snake->Update();
-      food_eaten |= snake->did_eat_food(food.x,food.y);
+    snake->Update();
+    needs_more_food |= snake->just_ate_food;
+    if (!player_snake->alive){
+      std::cout<<"GAME OVER"<<"\n";
+      game_over = true;
     }
   }
 
-  if (food_eaten){
+  if (needs_more_food){
     PlaceFood();
   }
 }

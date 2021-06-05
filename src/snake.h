@@ -20,10 +20,7 @@ class Snake {
         player_controlled(player_controlled) {}
 
   void Update();
-
   void GrowBody();
-  //checks if the snake is a the right position to eat the food; updates accordingly;
-  bool did_eat_food(int x, int y); 
 
   Direction direction = Direction::kUp;
 
@@ -34,6 +31,7 @@ class Snake {
   bool player_controlled{false};
   float head_x;
   float head_y;
+  bool just_ate_food;
   std::vector<SDL_Point> body;
   Color color;
   std::vector<std::vector<int>>& grid;
@@ -41,6 +39,7 @@ class Snake {
  private:
   void UpdateHead();
   void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
+  void cleanup();
 
   bool growing{false};
   int grid_width;

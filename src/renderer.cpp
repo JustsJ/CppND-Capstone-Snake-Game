@@ -55,7 +55,10 @@ void Renderer::Render(std::vector<Snake*> const snakes, SDL_Point const &food) {
 
   // Render snake's body
   for (Snake* snake: snakes){
-    if (!snake->alive) continue;
+    if (!snake->alive) {
+      continue;
+      std::cout<<"skipping dead snake!"<<"\n";
+    }
     SDL_SetRenderDrawColor(sdl_renderer,
      snake->color.hex_values[0], snake->color.hex_values[1],
       snake->color.hex_values[2], snake->color.hex_values[3]);
@@ -68,7 +71,7 @@ void Renderer::Render(std::vector<Snake*> const snakes, SDL_Point const &food) {
     // Render snake's head
     block.x = static_cast<int>(snake->head_x) * block.w;
     block.y = static_cast<int>(snake->head_y) * block.h;
-    if (nake->player_controlled) {
+    if (snake->player_controlled) {
       SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
     } else{
       SDL_SetRenderDrawColor(sdl_renderer, 0x7A, 0x00, 0xCC, 0xFF);
