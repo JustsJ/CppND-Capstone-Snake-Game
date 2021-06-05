@@ -16,7 +16,10 @@ void Controller::HandleInput(bool &running) {
   while (SDL_PollEvent(&e)) {
     if (e.type == SDL_QUIT) {
       running = false;
-    } else if (e.type == SDL_KEYDOWN) {
+      //ignore the input unless the snake just moved
+      //to prevent the snake from running into itself via quick u-turn
+    } else if (e.type == SDL_KEYDOWN && snake.ready_for_input) {
+      snake.ready_for_input = false;
       switch (e.key.keysym.sym) {
         case SDLK_UP:
           ChangeDirection(Snake::Direction::kUp,

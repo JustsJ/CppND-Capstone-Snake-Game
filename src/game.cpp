@@ -56,12 +56,11 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
 }
 
 Game::~Game(){
-  
-  delete grid;
-
   for (Snake* snake: snakes){
     delete snake;
   }
+    
+  delete grid;
 }
 
 void Game::Run(Renderer &renderer,
@@ -93,7 +92,7 @@ void Game::Run(Renderer &renderer,
     // Input, Update, Render - the main game loop.
     player_controller.HandleInput(running);
 
-    for (CpuController c: cpu_controllers){
+    for (CpuController& c: cpu_controllers){
       c.handle_direction(food.x,food.y);
     }
 
@@ -145,18 +144,23 @@ void Game::PlaceFood() {
 void Game::Update() {
   if (game_over) return;
 
-  bool needs_more_food = false;
-
-  for (Snake* snake: snakes){
+  for (int i=0;i<snakes.size();i++){
+    Snake* snake = snakes[i];
     snake->Update();
-    needs_more_food |= snake->just_ate_food;
-    if (!player_snake->alive){
-      std::cout<<"GAME OVER"<<"\n";
-      game_over = true;
+    //remove dead snakes (keep the player around to show score at the end)
+    if(!snake->alive && !snake->player_controlled){
+      snakes.erase(snakes.begin()+i);
+      delete snake;
     }
   }
 
-  if (needs_more_food){
+  if (!player_snake->alive){
+    game_over = true;
+    return;
+  }
+
+  //check if anyone just ate the food
+  if ((*grid)[food.x][food.y] != 2){
     PlaceFood();
   }
 }

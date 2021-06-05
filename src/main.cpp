@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "controller.h"
 #include "game.h"
 #include "renderer.h"
@@ -16,8 +17,8 @@ int main() {
   std::cout << "Welcome to Snake!"<<"\n";
   std::cout << "Please enter the ammount of snakes for this game: ";
   std::cin >> n;
-  while (n <= 0 ){
-    std::cout <<"\n"<<"Invalid ammount. It should be atleast 1. Try again: ";
+  while (n <= 0 || n > 20){
+    std::cout <<"\n"<<"Invalid ammount. It should be between 1-20. Try again: ";
     std:: cin >> n;
   }
   std::cout<< "Starting game with "<<n<<" snakes. Good luck!"<<"\n";

@@ -7,7 +7,7 @@
 
 class Snake {
  public:
-  enum class Direction { kUp, kDown, kLeft, kRight };
+  enum class Direction { kNone, kUp, kDown, kLeft, kRight };
 
   Snake(int grid_width, int grid_height, int start_x, int start_y,
   std::vector<std::vector<int>>& grid, Color color, bool player_controlled)
@@ -18,6 +18,8 @@ class Snake {
         grid(grid),
         color(color),
         player_controlled(player_controlled) {}
+
+  ~Snake();
 
   void Update();
   void GrowBody();
@@ -31,7 +33,7 @@ class Snake {
   bool player_controlled{false};
   float head_x;
   float head_y;
-  bool just_ate_food;
+  bool ready_for_input{true}; //helps with filtering user input
   std::vector<SDL_Point> body;
   Color color;
   std::vector<std::vector<int>>& grid;
