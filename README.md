@@ -23,11 +23,11 @@ When the player snake hits an obstacle, the game ends.
 ## Capstone Rubric points addressed
 1. **Loops, Functions, I/O**
     1. **The project demonstrates an understanding of C++ functions and control structures-** examples of control structures used are:
-        -*if*, *if..else* and *if..else if..else* (e.g. in snake.cpp lines 62-82),
-        -*switch* (e.g. in snake.cpp lines 33-49, cpu_controller.cpp lines 105-141),
-        -*while* (e.g. in game.cpp lines 82-118),
-        -*do..while* (e.g. in main.cpp lines 25-50),
-        -*for* loop (range based and regular)(e.g. in game.cpp lines 71-77, 140-148)
+        - *if*, *if..else* and *if..else if..else* (e.g. in snake.cpp lines 62-82),
+        - *switch* (e.g. in snake.cpp lines 33-49, cpu_controller.cpp lines 105-141),
+        - *while* (e.g. in game.cpp lines 82-118),
+        - *do..while* (e.g. in main.cpp lines 25-50),
+        - *for* loop (range based and regular)(e.g. in game.cpp lines 71-77, 140-148)
     2. **The project accepts user input and processes the input-** apart from the input used to control the snake (which was already implemented in the example), the program also asks at the start to input the desired ammount of snakes in the game (in main.cpp lines 20-50). If the input is not a number or if the number is not within the desired range (1-20), the program asks the user to try again.
 2. **Object Oriented Programming**
     1. **The project uses Object Oriented Programming techniques-** some new classes added to the project are CpuController and Color. Changes to existing classes have also been organized to keep the classes structured (as seen in class definitions in cpu_controller.h, snake.h, game.h).
