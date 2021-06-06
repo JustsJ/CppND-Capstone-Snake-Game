@@ -22,22 +22,22 @@ When the player snake hits an obstacle, the game ends.
 
 ## Capstone Rubric points addressed
 1. **Loops, Functions, I/O**
-  1. **The project demonstrates an understanding of C++ functions and control structures-** examples of control structures used are:
-    -*if*, *if..else* and *if..else if..else* (e.g. in snake.cpp lines 62-82),
-    -*switch* (e.g. in snake.cpp lines 33-49, cpu_controller.cpp lines 105-141),
-    -*while* (e.g. in game.cpp lines 82-118),
-    -*do..while* (e.g. in main.cpp lines 25-50),
-    -*for* loop (range based and regular)(e.g. in game.cpp lines 71-77, 140-148)
-  2. **The project accepts user input and processes the input-** apart from the input used to control the snake (which was already implemented in the example), the program also asks at the start to input the desired ammount of snakes in the game (in main.cpp lines 20-50). If the input is not a number or if the number is not within the desired range (1-20), the program asks the user to try again.
+    1. **The project demonstrates an understanding of C++ functions and control structures-** examples of control structures used are:
+        -*if*, *if..else* and *if..else if..else* (e.g. in snake.cpp lines 62-82),
+        -*switch* (e.g. in snake.cpp lines 33-49, cpu_controller.cpp lines 105-141),
+        -*while* (e.g. in game.cpp lines 82-118),
+        -*do..while* (e.g. in main.cpp lines 25-50),
+        -*for* loop (range based and regular)(e.g. in game.cpp lines 71-77, 140-148)
+    2. **The project accepts user input and processes the input-** apart from the input used to control the snake (which was already implemented in the example), the program also asks at the start to input the desired ammount of snakes in the game (in main.cpp lines 20-50). If the input is not a number or if the number is not within the desired range (1-20), the program asks the user to try again.
 2. **Object Oriented Programming**
-  1. **The project uses Object Oriented Programming techniques-** some new classes added to the project are CpuController and Color. Changes to existing classes have also been organized to keep the classes structured (as seen in class definitions in cpu_controller.h, snake.h, game.h).
-  2. **Classes use appropriate access specifiers for class members-** self-explanatory, all class members have an explicit access modifier that matches it's intended usage. Seen in .h files like cpu_controller.h, snake.h, game.h.
-  3. **Class constructors utilize member initialization lists-** initialization lists are used in classes Game, Snake, CpuController. (seen in game.cpp lines 6-10, snake.h lines 13-21,cpu_controller.h lines 9-12)
-  4. **Classes abstract implementation details from their interfaces-** all class, variable and method names are made to give an idea of what it's for. To help with that, there are comments throughout the project explaining how things are working (e.g. all of cpu_controller.cpp, snake.cpp) 
+    1. **The project uses Object Oriented Programming techniques-** some new classes added to the project are CpuController and Color. Changes to existing classes have also been organized to keep the classes structured (as seen in class definitions in cpu_controller.h, snake.h, game.h).
+    2. **Classes use appropriate access specifiers for class members-** self-explanatory, all class members have an explicit access modifier that matches it's intended usage. Seen in .h files like cpu_controller.h, snake.h, game.h.
+    3. **Class constructors utilize member initialization lists-** initialization lists are used in classes Game, Snake, CpuController. (seen in game.cpp lines 6-10, snake.h lines 13-21,cpu_controller.h lines 9-12)
+    4. **Classes abstract implementation details from their interfaces-** all class, variable and method names are made to give an idea of what it's for. To help with that, there are comments throughout the project explaining how things are working (e.g. all of cpu_controller.cpp, snake.cpp) 
 3. **Memory Management**
-  1. **The project makes use of references in function declarations-** The grid member of Game class is passed to all the instances of CpuController and Snake by reference, to ensure everyone is looking at the same grid (see constructors for the Snake class in snake.h line 14 and for the CpuController class in cpu_controller.h line 9).
-  2. **The project uses destructors appropriately.-** When a Snake dies (i.e. is destroyed, as seen in game.cpp lines 144-147), we need to clear it off of the grid. This is also done in the destructor of the Snake class (snake.cpp lines 6-8). Also, the snake objects are allocated dynamically (game.cpp lines 29 and 45) and also destroyed when the instance of Game class is destroyed (game.cpp lines 51-57), meaning the game is over. 
-  3. **The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate-** Similar to the last point, the Game class both allocates instances of Snake and the grid object, and also destroys them when the game is over.
+    1. **The project makes use of references in function declarations-** The grid member of Game class is passed to all the instances of CpuController and Snake by reference, to ensure everyone is looking at the same grid (see constructors for the Snake class in snake.h line 14 and for the CpuController class in cpu_controller.h line 9).
+    2. **The project uses destructors appropriately.-** When a Snake dies (i.e. is destroyed, as seen in game.cpp lines 144-147), we need to clear it off of the grid. This is also done in the destructor of the Snake class (snake.cpp lines 6-8). Also, the snake objects are allocated dynamically (game.cpp lines 29 and 45) and also destroyed when the instance of Game class is destroyed (game.cpp lines 51-57), meaning the game is over. 
+    3. **The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate-** Similar to the last point, the Game class both allocates instances of Snake and the grid object, and also destroys them when the game is over.
 
 ## How to run
 Once all the dependencies are met (see below), create a build directory, navigate the terminal there and run the following:
