@@ -30,7 +30,7 @@ class Game {
   std::vector<Snake*> snakes;
   SDL_Point food;
   bool game_over;
-  std::vector<std::vector<int>>* grid;
+  std::vector<std::vector<Cell>>* grid;
 
   std::random_device dev;
   std::mt19937 engine;

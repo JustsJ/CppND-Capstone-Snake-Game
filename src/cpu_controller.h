@@ -1,10 +1,12 @@
+#ifndef CPUCONTR_H
+#define CPUCONTR_H
 #include "snake.h"
 #include <vector>
 
 class CpuController{
 
     public:
-    CpuController(Snake& snake, std::vector<std::vector<int>>& grid):
+    CpuController(Snake& snake, std::vector<std::vector<Cell>>& grid):
      snake(snake), grid(grid),
      grid_width(grid.size()), grid_height(grid[0].size()){};
     void handle_direction(int food_x, int food_y);
@@ -19,6 +21,8 @@ class CpuController{
     int grid_width, grid_height;
 
     Snake& snake;
-    std::vector<std::vector<int>>& grid;
+    std::vector<std::vector<Cell>>& grid;
 
 };
+
+#endif

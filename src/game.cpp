@@ -1,11 +1,13 @@
 #include "game.h"
 #include <iostream>
 #include "SDL.h"
+#include "cell.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
     : engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_h(0, static_cast<int>(grid_height - 1)),
+      grid(new std::vector<std::vector<Cell>>(grid_width,std::vector<Cell>(grid_height,Cell::kClear))) {
         
         //create all the snakes in the game;
         //Each snake starts with a square of free space around it;
@@ -18,8 +20,6 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
         int max_positions_x = grid_width / space_per_snake;
         int max_pisitions_y = grid_height / space_per_snake;
         
-        grid = new std::vector<std::vector<int>>(grid_width,std::vector<int>(grid_height,0));
-
         for (int i=0;i<snake_count;i++){
           Color color(Colors(i%10));
 
@@ -27,9 +27,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
           if (i==0){
             
             snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,*grid,color,true));
-            (*grid)[start_x][start_y] = 1;
+            (*grid)[start_x][start_y] = Cell::kSnake;
             player_snake = snakes[0];
-            //std::cout<<"player created: "<<snakes[0]<<"\n";
             continue;
           }
           //adjust the start coordinates to make sure each snake has it's space
@@ -43,15 +42,8 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, int snake_count)
             start_x += space_per_snake;
           }
           snakes.push_back(new Snake(grid_width, grid_height,start_x,start_y,*grid,color,false));
-          (*grid)[start_x][start_y] = 1;
-          //std::cout<<"snake created: "<<snakes[i]<<"\n";
+          (*grid)[start_x][start_y] = Cell::kSnake;
         }
-
-  //std::cout<<"creation complete: "<<"\n";
-  //std::cout<<"player snake: "<<player_snake<<"\n";
-  //for (Snake* snake: snakes){
-  //  std::cout<<snake<<"\n";
-  //}
 
 }
 
@@ -132,10 +124,10 @@ void Game::PlaceFood() {
     y = random_h(engine);
 
     
-    if ((*grid)[x][y] == 0) {
+    if ((*grid)[x][y] == Cell::kClear) {
       food.x = x;
       food.y = y;
-      (*grid)[x][y] = 2;
+      (*grid)[x][y] = Cell::kFood;
       return;
     }
   }
@@ -160,7 +152,7 @@ void Game::Update() {
   }
 
   //check if anyone just ate the food
-  if ((*grid)[food.x][food.y] != 2){
+  if ((*grid)[food.x][food.y] != Cell::kFood){
     PlaceFood();
   }
 }

@@ -63,21 +63,21 @@ void Snake::UpdateHead() {
     ready_for_input = true;
 
      //check if the snake dies by running into another snake (or itself)
-    if (grid[t_head_x][t_head_y] == 1){
+    if (grid[t_head_x][t_head_y] == Cell::kSnake){
       alive = false;
       //clean up the head
-      grid[t_old_x][t_old_y] = 0;
+      grid[t_old_x][t_old_y] = Cell::kClear;
     }
     //check if the snake just ate food
-    else if (grid[t_head_x][t_head_y] == 2){
+    else if (grid[t_head_x][t_head_y] == Cell::kFood){
       growing = true;
-      grid[t_head_x][t_head_y] = 1;
+      grid[t_head_x][t_head_y] = Cell::kSnake;
       if (player_controlled){
         score++;
       }
     }
     else{
-      grid[t_head_x][t_head_y] = 1;
+      grid[t_head_x][t_head_y] = Cell::kSnake;
     }
   }
 }
@@ -85,11 +85,11 @@ void Snake::UpdateHead() {
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
   // Add previous head location to vector
   body.push_back(prev_head_cell);
-  grid[prev_head_cell.x][prev_head_cell.y] = 1;
+  grid[prev_head_cell.x][prev_head_cell.y] = Cell::kSnake;
 
   if (!growing) {
     // Remove the tail from the vector. clears that cell on the grid
-    grid[body[0].x][body[0].y] = 0;
+    grid[body[0].x][body[0].y] = Cell::kClear;
     body.erase(body.begin());
   } else {
     growing = false;
@@ -98,7 +98,7 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
 
   //update grid
   for (SDL_Point const &item: body){
-    grid[item.x][item.y] = 1;
+    grid[item.x][item.y] = Cell::kSnake;
   }
 }
 
@@ -107,6 +107,6 @@ void Snake::GrowBody() { growing = true; }
 //removes the snake entirely from the grid
 void Snake::cleanup(){
   for (SDL_Point const &item: body){
-    grid[item.x][item.y] = 0;
+    grid[item.x][item.y] = Cell::kClear;
   }
 } 

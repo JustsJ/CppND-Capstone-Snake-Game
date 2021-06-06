@@ -4,13 +4,14 @@
 #include <vector>
 #include "SDL.h"
 #include "color.h"
+#include "cell.h"
 
 class Snake {
  public:
   enum class Direction { kNone, kUp, kDown, kLeft, kRight };
 
   Snake(int grid_width, int grid_height, int start_x, int start_y,
-  std::vector<std::vector<int>>& grid, Color color, bool player_controlled)
+  std::vector<std::vector<Cell>>& grid, Color color, bool player_controlled)
       : grid_width(grid_width),
         grid_height(grid_height),
         head_x(start_x),
@@ -36,7 +37,7 @@ class Snake {
   bool ready_for_input{true}; //helps with filtering user input
   std::vector<SDL_Point> body;
   Color color;
-  std::vector<std::vector<int>>& grid;
+  std::vector<std::vector<Cell>>& grid;
 
  private:
   void UpdateHead();

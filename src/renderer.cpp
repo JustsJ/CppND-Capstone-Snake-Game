@@ -57,7 +57,6 @@ void Renderer::Render(std::vector<Snake*> const snakes, SDL_Point const &food) {
   for (Snake* snake: snakes){
     if (!snake->alive) {
       continue;
-      std::cout<<"skipping dead snake!"<<"\n";
     }
     SDL_SetRenderDrawColor(sdl_renderer,
      snake->color.hex_values[0], snake->color.hex_values[1],

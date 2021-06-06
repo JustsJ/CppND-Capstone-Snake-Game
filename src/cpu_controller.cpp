@@ -1,7 +1,6 @@
 #include "cpu_controller.h"
 #include <iostream>
 
-
 void CpuController::handle_direction(int food_x, int food_y){
 
     if (!snake.alive){
@@ -107,7 +106,7 @@ bool CpuController::check_colision(Snake::Direction potential_dir, int range){
     case Snake::Direction::kUp:
         for (int i = t_head_y - 1; i>=t_head_y - range; i--){
             int y = fmod(i + grid_height, grid_height);
-            if (grid[t_head_x][y] == 1){
+            if (grid[t_head_x][y] == Cell::kSnake){
                 return true;
             }
         }
@@ -115,7 +114,7 @@ bool CpuController::check_colision(Snake::Direction potential_dir, int range){
     case Snake::Direction::kDown:
         for (int i = t_head_y + 1; i<=t_head_y + range; i++){
             int y = fmod(i + grid_height, grid_height);
-            if (grid[t_head_x][y] == 1){
+            if (grid[t_head_x][y] == Cell::kSnake){
                 return true;
             }
         }
@@ -123,7 +122,7 @@ bool CpuController::check_colision(Snake::Direction potential_dir, int range){
     case Snake::Direction::kLeft:
         for (int i = t_head_x - 1; i>=t_head_x - range; i--){
             int x = fmod(i + grid_width, grid_width);
-            if (grid[x][t_head_y] == 1){
+            if (grid[x][t_head_y] == Cell::kSnake){
                 return true;
             }
         }
@@ -131,7 +130,7 @@ bool CpuController::check_colision(Snake::Direction potential_dir, int range){
     case Snake::Direction::kRight:
         for (int i = t_head_x + 1; i<=t_head_x + range; i++){
             int x = fmod(i + grid_width, grid_width);
-            if (grid[x][t_head_y] == 1){
+            if (grid[x][t_head_y] == Cell::kSnake){
                 return true;
             }
         }
